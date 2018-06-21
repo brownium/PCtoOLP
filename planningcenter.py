@@ -47,7 +47,7 @@ plan_url = plans['data'][plan_index]['links']['self']
 
 plan_content = requests.get(plan_url, auth=(pco_application_id,pco_secret)).json()
 
-items_url = plan_content['data']['links']['items']
+items_url = plan_content['data']['links']['items'] + "?include=song,arrangement"
 items = requests.get(items_url, auth=(pco_application_id,pco_secret)).json()
 
 service_manager = openlp.ServiceManager(plan_date)
@@ -56,23 +56,29 @@ for item in items['data']:
     item_title = item['attributes']['title']
     print "{0}".format(item_title)
 
-    item_url = item['links']['self']
-    item_data = requests.get(item_url, auth=(pco_application_id,pco_secret)).json()
+    if item['attributes']['item_type'] == 'song':
+        arrangement_id = item['relationships']['arrangement']['data']['id']
+        song_id = item['relationships']['song']['data']['id']
 
-    if item_data['data']['attributes']['item_type'] == 'song':
-
-        arrangement_url = item_data['data']['links']['arrangement']
-        arrangement = requests.get(arrangement_url, auth=(pco_application_id,pco_secret)).json()
-
-        song_url = item_data['data']['links']['song']
-        song_data = requests.get(song_url, auth=(pco_application_id,pco_secret)).json()
-        author = song_data['data']['attributes']['author']
-
+        # get arrangement from "included" resources
+        arrangement_data = {}
+        song_data = {}
+        for included_item in items['included']:
+            if included_item['type'] == 'Song' and included_item['id'] == song_id:
+                song_data = included_item
+            elif included_item['type'] == 'Arrangement' and included_item['id'] == arrangement_id:
+                arrangement_data = included_item
+                
+            # if we have both song and arrangement set, stop iterating
+            if len(song_data) and len(arrangement_data):
+                break
+            
+        author = song_data['attributes']['author']   
         if author is None:
             author = "Unknown"
 
-        lyrics = arrangement['data']['attributes']['lyrics']
-        arrangement_updated_at = arrangement['data']['attributes']['updated_at']
+        lyrics = arrangement_data['attributes']['lyrics']
+        arrangement_updated_at = arrangement_data['attributes']['updated_at']
 
         song = openlp.Song(item_title,author,lyrics,arrangement_updated_at)
         service_manager.AddServiceItem(song)
