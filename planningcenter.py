@@ -2,7 +2,19 @@
 # print "Hello World!"
 
 import json
-filename="C:/Users/jkirklan/Documents/test_openlp.osj"
+import os
+
+from os.path import expanduser
+from sys import platform
+
+home = expanduser("~")
+OLPRoot = os.path.join(home, "olp")
+
+if not os.path.exists(OLPRoot):
+    os.makedirs(os.path.join(home, "olp"))
+
+filename=os.path.join(OLPRoot, "test_openlp.osj")
+
 json_object = None
 with open(filename,'r') as f:
     json_object = json.load(f)
@@ -33,7 +45,7 @@ index = 0
 for service_type in service_types['data']:
     service_type_name = service_type['attributes']['name']
     service_type_url = service_type['links']['self']
-    
+
     print "{0}\t{1}\t{2}".format(index, service_type_name, service_type_url)
     index += 1
 
@@ -55,7 +67,7 @@ for plan in plans['data']:
     plan_date = plan['attributes']['dates']
     print "{0}\t{1}".format(index,plan_date)
     index += 1
-    
+
 plan_index = input("Enter Index (far left number) of Desired Plan Date:  ")
 plan_date = plans['data'][plan_index]['attributes']['dates']
 plan_url = plans['data'][plan_index]['links']['self']
@@ -73,32 +85,30 @@ for item in items['data']:
 
     item_url = item['links']['self']
     item_data = requests.get(item_url, auth=(pco_application_id,pco_secret)).json()
-    
+
     if item_data['data']['attributes']['item_type'] == 'song':
 
         arrangement_url = item_data['data']['links']['arrangement']
         arrangement = requests.get(arrangement_url, auth=(pco_application_id,pco_secret)).json()
-        
+
         song_url = item_data['data']['links']['song']
         song_data = requests.get(song_url, auth=(pco_application_id,pco_secret)).json()
         author = song_data['data']['attributes']['author']
-        
+
         if author is None:
             author = "Unknown"
-        
+
         lyrics = arrangement['data']['attributes']['lyrics']
         arrangement_updated_at = arrangement['data']['attributes']['updated_at']
-        
+
         song = openlp.Song(item_title,author,lyrics,arrangement_updated_at)
         service_manager.AddServiceItem(song)
-    
+
     else:
-        
+
         custom_slide = openlp.CustomSlide(item_title)
         service_manager.AddServiceItem(custom_slide)
 
 service_manager.WriteOutput()
 
 print "Done"
-
-    
