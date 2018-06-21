@@ -13,40 +13,75 @@ def SplitLyricsIntoVerses(lyrics):
     # the return value will be an array of hashes with 2 elements:  
     # verseTag and raw_slide (matches openLP requirements)
     
+    # create a regular expression for potential VERSE,CHORUS tags included
+    # inline inside the lyrics... these are on a single line and 
+    verseMarkerPattern = re.compile('^(v|verse|c|chorus|b|bridge|prechorus|instrumental|intro|outro|vamp|breakdown|ending|interlude|tag)\s*\d*$',re.IGNORECASE)
+    
     lyrics_lines = lyrics.split("\n")
     
     foundEmptyLine = 0
     verseNumber = 1
     verseLines = ''
     outputVerses = []
+    verseTagFromLyrics = ''
+    nextVerseTagFromLyrics = ''
 
     for line in lyrics_lines:
-        # remove trailing whitespace and line breaks
+        # remove beginning/trailing whitespace and line breaks
         line = line.rstrip()
+        line = line.lstrip()
         # strip out curly braces and the content inside {}
         line = re.sub('{.*?}','',line)
         # strip out any extraneous tags <...>
         line = re.sub('<.*?>','',line)
-        
+                
+        # if we found any of the verse/chorus markers, 
+        # save the text and treat this like a blank line
+        if verseMarkerPattern.search(line):
+            if len(verseTagFromLyrics):
+                nextVerseTagFromLyrics = line
+            else:
+                verseTagFromLyrics = line
+            line=''
+                
         if len(line) == 0:
             foundEmptyLine = 1
-        else:
-            if foundEmptyLine and len(verseLines):
-                verse = {}
+        
+        if foundEmptyLine and len(verseLines):                
+            verse = {}
+            
+            # add verse tags from the lyrics if they are there and
+            # reset the verseTagFromLyrics variable
+            if len(verseTagFromLyrics):
+                verse['verseTag'] = verseTagFromLyrics
+                if len(nextVerseTagFromLyrics):
+                    verseTagFromLyrics = nextVerseTagFromLyrics
+                    nextVerseTagFromLyrics = ''
+                else:
+                    verseTagFromLyrics = ''
+            else:
                 verse['verseTag'] = "V{0}".format(verseNumber)
-                verse['raw_slide'] = verseLines
-                outputVerses.append(verse)
-                
-                # reset state variables, including saving this line
-                verseLines = line
-                foundEmptyLine = 0
                 verseNumber += 1
-            else:            
+
+            verse['raw_slide'] = verseLines
+            outputVerses.append(verse)
+            
+            # reset state variables, including saving this line
+            verseLines = line
+            foundEmptyLine = 0
+        else:       
+            if len(verseLines):
                 verseLines += "\n" + line
-                
+            else:
+                verseLines = line
+            foundEmptyLine = 0  
+            
     # put the very last verseLines into the outputVerses array
     verse = {}
-    verse['verseTag'] = "V{0}".format(verseNumber)
+    if len(verseTagFromLyrics):
+        verse['verseTag'] = verseTagFromLyrics
+    else:
+        verse['verseTag'] = "V{0}".format(verseNumber)
     verse['raw_slide'] = verseLines
     outputVerses.append(verse)
     
