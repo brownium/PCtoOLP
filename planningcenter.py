@@ -25,7 +25,7 @@ full_path = os.path.join(default_path,"test_openlp_out")
 
 with open(full_path, 'w') as outfile:
     json.dump(json_object, outfile, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    print "Wrote Output to {0}".format(full_path)
+    print "Wrote Output to {0}".format(full_path) #this is new syntax to me - I would write it as: print "Wrote Output to %s" % (full_path)
 
 import requests
 import openlp
