@@ -2,6 +2,55 @@
 
 import requests
 import openlp
+import re
+
+def SplitLyricsIntoVerses(lyrics):
+    
+    # walk through the lyrics, one line at a time
+    # if we have a double empty line followed by more than one line, 
+    # create a new verse
+    
+    # the return value will be an array of hashes with 2 elements:  
+    # verseTag and raw_slide (matches openLP requirements)
+    
+    lyrics_lines = lyrics.split("\n")
+    
+    foundEmptyLine = 0
+    verseNumber = 1
+    verseLines = ''
+    outputVerses = []
+
+    for line in lyrics_lines:
+        # remove trailing whitespace and line breaks
+        line = line.rstrip()
+        # strip out curly braces and the content inside {}
+        line = re.sub('{.*?}','',line)
+        # strip out any extraneous tags <...>
+        line = re.sub('<.*?>','',line)
+        
+        if len(line) == 0:
+            foundEmptyLine = 1
+        else:
+            if foundEmptyLine and len(verseLines):
+                verse = {}
+                verse['verseTag'] = "V{0}".format(verseNumber)
+                verse['raw_slide'] = verseLines
+                outputVerses.append(verse)
+                
+                # reset state variables, including saving this line
+                verseLines = line
+                foundEmptyLine = 0
+                verseNumber += 1
+            else:            
+                verseLines += "\n" + line
+                
+    # put the very last verseLines into the outputVerses array
+    verse = {}
+    verse['verseTag'] = "V{0}".format(verseNumber)
+    verse['raw_slide'] = verseLines
+    outputVerses.append(verse)
+    
+    return outputVerses
 
 # setup PCO login credentials
 # this is hardcoded to kirkland's token and secret key
@@ -80,7 +129,11 @@ for item in items['data']:
         lyrics = arrangement_data['attributes']['lyrics']
         arrangement_updated_at = arrangement_data['attributes']['updated_at']
 
-        song = openlp.Song(item_title,author,lyrics,arrangement_updated_at)
+        # split the lyrics into verses
+        verses = []
+        verses = SplitLyricsIntoVerses(lyrics)
+
+        song = openlp.Song(item_title,author,verses,arrangement_updated_at)
         service_manager.AddServiceItem(song)
 
     else:

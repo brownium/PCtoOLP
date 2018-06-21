@@ -88,7 +88,7 @@ class ServiceItem:
         self.openlp_data['serviceitem']['header']['plugin'] = ''
 
 class Song(ServiceItem):
-    def __init__(self, song_title, authors, lyrics, update_timestamp):
+    def __init__(self, song_title, authors, verses, update_timestamp):
         ServiceItem.__init__(self)
 
         self.update_timestamp = update_timestamp
@@ -105,8 +105,9 @@ class Song(ServiceItem):
         self.openlp_data['serviceitem']['header']['plugin'] = 'songs'
         self.openlp_data['serviceitem']['header']['theme'] = None
 
-        self.AppendVerse(lyrics)
-
+        for verse in verses:
+            self.AppendVerse(verse['raw_slide'],verse['verseTag'])
+        self.UpdateXMLString()
 
     def UpdateXMLString(self):
         xml_string = u"""<?xml version='1.0' encoding='UTF-8'?>\
@@ -119,8 +120,8 @@ createdIn=\"Planning Center Online\" modifiedIn=\"Planning Center Online\" modif
 
         for verse in self.openlp_data['serviceitem']['data']:
             xml_string += u"""\
-<lyrics>
-<verse name=\"{0}\"><lines>{1}</lines></verse>
+<lyrics>\
+<verse name=\"{0}\"><lines>{1}</lines></verse>\
 </lyrics>""".format(verse.verseTag, verse.raw_slide)
 
         xml_string += u"</song>"
@@ -130,12 +131,10 @@ createdIn=\"Planning Center Online\" modifiedIn=\"Planning Center Online\" modif
     def AppendVerse(self, lyrics, verse_tag = 'V1'):
         # create a verse title (first 25 characters of first line)
         lyrics_array = lyrics.split('\n')
-        verse_title = lyrics_array[0][:25]
+        verse_title = lyrics_array[0][:35]
         verse = Verse(verse_tag, verse_title, lyrics)
 
         self.openlp_data['serviceitem']['data'].append(verse)
-
-        self.UpdateXMLString()
 
 class CustomSlide(ServiceItem):
     def __init__(self,custom_slide_title):
