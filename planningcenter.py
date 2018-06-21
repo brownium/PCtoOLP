@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # from openlp import ServiceManager
 # print "Hello World!"
 
