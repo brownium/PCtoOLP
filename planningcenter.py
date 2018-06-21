@@ -20,8 +20,8 @@ with open(filename,'r') as f:
     json_object = json.load(f)
 
 # write to a default path with plan_name as the filename
-default_path = "C:\Users\jkirklan\Documents"
-full_path = "{0}\{1}.osj".format(default_path,"test_openlp_out")
+default_path = os.path.join(home, "Documents")
+full_path = os.path.join(default_path,"test_openlp_out")
 
 with open(full_path, 'w') as outfile:
     json.dump(json_object, outfile, default=lambda o: o.__dict__, sort_keys=True, indent=4)
