@@ -1,34 +1,5 @@
 #!/usr/bin/python
 
-# from openlp import ServiceManager
-# print "Hello World!"
-
-import json
-import os
-
-from os.path import expanduser
-from sys import platform
-
-home = expanduser("~")
-OLPRoot = os.path.join(home, "olp")
-
-if not os.path.exists(OLPRoot):
-    os.makedirs(os.path.join(home, "olp"))
-
-filename=os.path.join(OLPRoot, "test_openlp.osj")
-
-json_object = None
-with open(filename,'r') as f:
-    json_object = json.load(f)
-
-# write to a default path with plan_name as the filename
-default_path = os.path.join(home, "Documents")
-full_path = os.path.join(default_path,"test_openlp_out")
-
-with open(full_path, 'w') as outfile:
-    json.dump(json_object, outfile, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    print "Wrote Output to {0}".format(full_path) #this is new syntax to me - I would write it as: print "Wrote Output to %s" % (full_path)
-
 import requests
 import openlp
 

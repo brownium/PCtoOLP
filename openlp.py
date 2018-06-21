@@ -1,14 +1,15 @@
 import json
 import os
+import zipfile
 
 from os.path import expanduser
-from sys import platform
 
 home = expanduser("~")
-OLPRoot = os.path.join(home, "olp")
-
 default_path = os.path.join(home, "Documents")
-full_path = os.path.join(default_path,"test_openlp_out")
+full_path = os.path.join(default_path,"openlp_services")
+
+if not os.path.exists(full_path):
+    os.makedirs(full_path)
 
 class ServiceManager:
     def __init__(self,plan_name):
@@ -29,12 +30,21 @@ class ServiceManager:
     def WriteOutput(self):
 
         # write to a default path with plan_name as the filename
-        full_path = os.path.join(default_path,self.plan_name)
+        osj_path = self.plan_name + '.osj'
+        osz_path = self.plan_name + '.osz'
+        
+        # openlp doesn't like the "full path" to the osj file specified inside the zip file, 
+        # so by using chdir, I can eliminate the need to put the full path to the file to be zipped
+        os.chdir(full_path)
 
-        with open(full_path, 'w') as outfile:
+        with open(osj_path, 'w') as outfile:
             json.dump(self.openlp_data, outfile, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-            print "Wrote Output to {0}".format(full_path)
-
+            
+        with zipfile.ZipFile(osz_path, 'w') as osz_file:
+            osz_file.write(osj_path,compress_type=zipfile.ZIP_DEFLATED)
+            os.remove(osj_path)
+            print "Wrote Service File to {0}/{1}".format(full_path, osz_path)
+            
 class Verse:
     def __init__(self, verse_tag, verse_title, raw_slide):
         self.verseTag = verse_tag
