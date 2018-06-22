@@ -44,8 +44,8 @@ class ServiceManager:
         with zipfile.ZipFile(osz_path, 'w') as osz_file:
             osz_file.write(osj_path,compress_type=zipfile.ZIP_DEFLATED)
             os.remove(osj_path)
-            print "Wrote Service File to {0}/{1}".format(full_path, osz_path)
-            
+            return "Wrote Service File to:\n {0}/{1}".format(full_path, osz_path)
+
 class Verse:
     def __init__(self, verse_tag, verse_title, raw_slide):
         self.verseTag = verse_tag
@@ -124,7 +124,7 @@ class Song(ServiceItem):
         for verse in verses:
             
             # lookup the verseTag from the dictionary and use only a 2-digit
-            m = re.search("^(\w+?)\s*(\d)*$", verse['verseTag'])
+            m = re.search("^([A-Za-z]+)\s*(\d*)$", verse['verseTag'])
             verseTypePCO = m.group(1)
             if m.lastindex == 2:
                 verseTypePCONumber = m.group(2)
