@@ -1,6 +1,7 @@
 import json
 import os
 import zipfile
+import re
 
 from os.path import expanduser
 
@@ -20,7 +21,7 @@ class ServiceManager:
         openlp_core = {}
         openlp_core['openlp_core'] = {}
         openlp_core['openlp_core']['lite-service'] = False
-        openlp_core['openlp_core']['service-theme'] = None
+        openlp_core['openlp_core']['service-theme'] = ''
 
         self.openlp_data.append(openlp_core)
 
@@ -91,13 +92,15 @@ class Song(ServiceItem):
     def __init__(self, song_title, authors, verses, update_timestamp):
         ServiceItem.__init__(self)
 
+#         # remove the trailing Z on the timestamp
+#         self.update_timestamp = re.sub('Z$','',update_timestamp)
         self.update_timestamp = update_timestamp
 
         # set the custom elements that are unique for songs
         self.openlp_data['serviceitem']['header']['name'] = 'songs'
         self.openlp_data['serviceitem']['header']['data']['title'] = "{0}@".format(song_title.lower())
         self.openlp_data['serviceitem']['header']['data']['authors'] = authors
-        self.openlp_data['serviceitem']['header']['audit'] = [song_title, [authors], "", ""]
+        self.openlp_data['serviceitem']['header']['audit'] = [song_title, [authors], '', '']
         self.openlp_data['serviceitem']['header']['title'] = song_title
         self.openlp_data['serviceitem']['header']['icon'] = ':/plugins/plugin_songs.png'
         self.openlp_data['serviceitem']['header']['capabilities'] = [2,1,5,8,9,13]
@@ -110,21 +113,21 @@ class Song(ServiceItem):
         self.UpdateXMLString()
 
     def UpdateXMLString(self):
-        xml_string = u"""<?xml version='1.0' encoding='UTF-8'?>\
-<song xmlns=\"http://openlyrics.info/namespace/2009/song\" version=\"0.8\"
-createdIn=\"Planning Center Online\" modifiedIn=\"Planning Center Online\" modifiedDate=\"{2}\">\
+        xml_string = u"""<?xml version='1.0' encoding='UTF-8'?>
+<song xmlns=\"http://openlyrics.info/namespace/2009/song\" version=\"0.8\" \
+createdIn=\"OpenLP 2.4.6\" modifiedIn=\"OpenLP 2.4.6\" modifiedDate=\"{2}\">\
 <properties>\
 <titles><title>{0}</title></titles>\
 <authors><author>{1}</author></authors>\
-</properties>""".format(self.openlp_data['serviceitem']['header']['title'],self.openlp_data['serviceitem']['header']['data']['authors'],self.update_timestamp)
+</properties><lyrics>""".format(self.openlp_data['serviceitem']['header']['title'],self.openlp_data['serviceitem']['header']['data']['authors'],self.update_timestamp)
 
         for verse in self.openlp_data['serviceitem']['data']:
-            xml_string += u"""\
-<lyrics>\
-<verse name=\"{0}\"><lines>{1}</lines></verse>\
-</lyrics>""".format(verse.verseTag, verse.raw_slide)
+            
+            verse_with_html_breaks = re.sub("\n","<br/>",verse.raw_slide)
+            
+            xml_string += u"<verse name=\"{0}\"><lines>{1}</lines></verse>".format(verse.verseTag, verse_with_html_breaks)
 
-        xml_string += u"</song>"
+        xml_string += u"</lyrics></song>"
 
         self.openlp_data['serviceitem']['header']['xml_version'] = xml_string
 

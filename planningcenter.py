@@ -17,7 +17,7 @@ def SplitLyricsIntoVerses(lyrics):
     
     # create a regular expression for potential VERSE,CHORUS tags included
     # inline inside the lyrics... these are on a single line and 
-    verseMarkerPattern = re.compile('^(v|verse|c|chorus|b|bridge|prechorus|instrumental|intro|outro|vamp|breakdown|ending|interlude|tag)\s*\d*$',re.IGNORECASE)
+    verseMarkerPattern = re.compile('^(v|verse|c|chorus|bridge|prechorus|instrumental|intro|outro|vamp|breakdown|ending|interlude|tag)\s*\d*$',re.IGNORECASE)
     
     lyrics_lines = lyrics.split("\n")
     
