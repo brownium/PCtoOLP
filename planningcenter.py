@@ -4,6 +4,7 @@ import requests
 import openlp
 import re
 from datetime import datetime
+from planningcenter_auth import pco_application_id, pco_secret
 
 def SplitLyricsIntoVerses(lyrics):
     
@@ -89,11 +90,6 @@ def SplitLyricsIntoVerses(lyrics):
         outputVerses.append(verse)
     
     return outputVerses
-
-# setup PCO login credentials
-# this is hardcoded to kirkland's token and secret key
-pco_application_id = 'b98e22c011799eebe73facb8e2a54d5143ed1396bd4185176a9d5bcafb9b6c52'
-pco_secret = '4ecc64e1a4951c271ebe0e79359020037d8a1627f2301eba93af3084d0a9ff03'
 
 # Get ServiceTypes
 
