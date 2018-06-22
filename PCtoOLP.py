@@ -6,6 +6,8 @@ import planningcenter_api
 import sys
 from datetime import datetime
 import openlp
+import os
+from modulegraph.modulegraph import entry
 
 class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
     def __init__(self,parent):
@@ -24,6 +26,47 @@ class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
         self.m_serviceTypeComboBox.SetSelection(0)
         
         self.ShowPlanListForServiceTypeSelection()
+        
+        # See if we can find the templates directory for OpenLP
+        home = os.path.expanduser("~")
+        mac_openlp_themes_dir = os.path.join(home,'Library','Application Support','openlp','Data','themes')
+        
+        # iterate through the themes directory and save the names of each directory that also 
+        # contain an xml file inside the directory that matches the directory name
+        
+        theme_list = []
+        if os.path.isdir(mac_openlp_themes_dir):
+            for entry in os.listdir(mac_openlp_themes_dir):
+                if os.path.isdir(os.path.join(mac_openlp_themes_dir,entry)):
+                    if os.path.isfile(os.path.join(mac_openlp_themes_dir,entry,"{0}.xml".format(entry))):
+                        theme_list.append(entry)
+        
+        # pull configuration data in from wx.config (registry or config file)
+        config = wx.Config('PCtoOLP')
+        default_song_template = config.Read('default_song_template')
+        default_slide_template = config.Read('default_slide_template')
+                 
+        # if we found any themes, enable the theme selection dropdowns and populate them with themes
+        if len(theme_list):
+            for theme in theme_list:
+                song_index = self.m_songThemeComboBox.Append(theme)
+                slide_index = self.m_slideThemeComboBox.Append(theme)
+                
+                if default_song_template == theme:
+                    self.m_songThemeComboBox.SetSelection(song_index)
+                if default_slide_template == theme:
+                    self.m_slideThemeComboBox.SetSelection(slide_index)
+            
+            # enable the GUI elements
+            self.m_songThemeComboBox.Enable(True)   
+            self.m_slideThemeComboBox.Enable(True)
+            self.m_themeDefaultCheckBox.Enable(True)
+        
+            # set defaults to first element if not already set.
+            if self.m_songThemeComboBox.GetSelection() == wx.NOT_FOUND:
+                self.m_songThemeComboBox.SetSelection(0)
+            if self.m_slideThemeComboBox.GetSelection() == wx.NOT_FOUND:
+                self.m_slideThemeComboBox.SetSelection(0)
         
     def ShowPlanListForServiceTypeSelection(self):
         # get the service_type_id from the combo box
@@ -59,6 +102,16 @@ class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
     def OnSave( self, event ):
         # disable the save button so as to not get multiple clicks during the save operation
         self.m_saveButton.Enable(False)
+        
+        # save the song/slide template defaults if the checkbox is checked
+        if self.m_themeDefaultCheckBox.GetValue():
+            config = wx.Config('PCtoOLP')
+            default_song_template = self.m_songThemeComboBox.GetStringSelection()
+            default_slide_template = self.m_slideThemeComboBox.GetStringSelection()
+            
+            config.Write('default_song_template',default_song_template)
+            config.Write('default_slide_template',default_slide_template)
+
         # get the plan ID from the combobox
         planID = self.m_selectPlanComboBox.GetClientData(self.m_selectPlanComboBox.GetSelection())
         items = self.pcAPI.GetItemsDict(planID)
@@ -105,11 +158,13 @@ class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
                 verses = planningcenter_api.SplitLyricsIntoVerses(lyrics)
         
                 song = openlp.Song(item_title,author,verses,arrangement_updated_at)
+                song.SetTheme(self.m_songThemeComboBox.GetStringSelection())
                 service_manager.AddServiceItem(song)
         
             else:
         
                 custom_slide = openlp.CustomSlide(item_title)
+                custom_slide.SetTheme(self.m_slideThemeComboBox.GetStringSelection())
                 service_manager.AddServiceItem(custom_slide)
         
         file_location_message = service_manager.WriteOutput()

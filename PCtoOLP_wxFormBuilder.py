@@ -49,48 +49,46 @@ class MainFrame ( wx.Frame ):
 		fgSizer3.Add( self.m_selectPlanComboBox, 2, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		sbSizer3.Add( fgSizer3, 1, wx.EXPAND, 5 )
+		sbSizer3.Add( fgSizer3, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		bSizer1.Add( sbSizer3, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"OpenLP Template Settings" ), wx.VERTICAL )
+		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"OpenLP Theme Settings" ), wx.VERTICAL )
 		
-		bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
+		fgSizer5 = wx.FlexGridSizer( 2, 2, 0, 0 )
+		fgSizer5.AddGrowableCol( 1 )
+		fgSizer5.SetFlexibleDirection( wx.BOTH )
+		fgSizer5.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
-		self.m_staticText3 = wx.StaticText( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Song Template", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText3 = wx.StaticText( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Song Theme", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText3.Wrap( -1 )
-		bSizer4.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		fgSizer5.Add( self.m_staticText3, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		m_songTemplateComboBoxChoices = []
-		self.m_songTemplateComboBox = wx.ComboBox( sbSizer2.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_songTemplateComboBoxChoices, wx.CB_READONLY )
-		self.m_songTemplateComboBox.Enable( False )
+		m_songThemeComboBoxChoices = []
+		self.m_songThemeComboBox = wx.ComboBox( sbSizer2.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_songThemeComboBoxChoices, wx.CB_READONLY )
+		self.m_songThemeComboBox.Enable( False )
 		
-		bSizer4.Add( self.m_songTemplateComboBox, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		fgSizer5.Add( self.m_songThemeComboBox, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 		
-		
-		sbSizer2.Add( bSizer4, 1, wx.EXPAND, 5 )
-		
-		bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.m_staticText4 = wx.StaticText( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Slide Template", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText4 = wx.StaticText( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Slide Theme", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText4.Wrap( -1 )
-		bSizer5.Add( self.m_staticText4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		fgSizer5.Add( self.m_staticText4, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		m_customSlideTemplateComboBoxChoices = []
-		self.m_customSlideTemplateComboBox = wx.ComboBox( sbSizer2.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_customSlideTemplateComboBoxChoices, wx.CB_READONLY )
-		self.m_customSlideTemplateComboBox.Enable( False )
+		m_slideThemeComboBoxChoices = []
+		self.m_slideThemeComboBox = wx.ComboBox( sbSizer2.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_slideThemeComboBoxChoices, wx.CB_READONLY )
+		self.m_slideThemeComboBox.Enable( False )
 		
-		bSizer5.Add( self.m_customSlideTemplateComboBox, 1, wx.ALL, 5 )
+		fgSizer5.Add( self.m_slideThemeComboBox, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		sbSizer2.Add( bSizer5, 1, wx.EXPAND, 5 )
+		sbSizer2.Add( fgSizer5, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_checkBox1 = wx.CheckBox( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Save as Default Choices", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox1.SetValue(True) 
-		self.m_checkBox1.Enable( False )
+		self.m_themeDefaultCheckBox = wx.CheckBox( sbSizer2.GetStaticBox(), wx.ID_ANY, u"Save as Default Choices", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_themeDefaultCheckBox.SetValue(True) 
+		self.m_themeDefaultCheckBox.Enable( False )
 		
-		sbSizer2.Add( self.m_checkBox1, 0, wx.ALL, 5 )
+		sbSizer2.Add( self.m_themeDefaultCheckBox, 0, wx.ALL, 5 )
 		
 		
 		bSizer1.Add( sbSizer2, 0, wx.ALL|wx.EXPAND, 5 )

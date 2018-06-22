@@ -97,7 +97,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxStaticBoxSizer" expanded="0">
+                    <object class="wxStaticBoxSizer" expanded="1">
                         <property name="id">wxID_ANY</property>
                         <property name="label">Planning Center Plan Selection</property>
                         <property name="minimum_size"></property>
@@ -106,11 +106,11 @@
                         <property name="parent">1</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
-                            <object class="wxFlexGridSizer" expanded="0">
+                            <object class="wxFlexGridSizer" expanded="1">
                                 <property name="cols">2</property>
                                 <property name="flexible_direction">wxBOTH</property>
                                 <property name="growablecols">1</property>
@@ -482,28 +482,35 @@
                     <property name="border">5</property>
                     <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxStaticBoxSizer" expanded="0">
+                    <object class="wxStaticBoxSizer" expanded="1">
                         <property name="id">wxID_ANY</property>
-                        <property name="label">OpenLP Template Settings</property>
+                        <property name="label">OpenLP Theme Settings</property>
                         <property name="minimum_size"></property>
                         <property name="name">sbSizer2</property>
                         <property name="orient">wxVERTICAL</property>
                         <property name="parent">1</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
-                            <object class="wxBoxSizer" expanded="0">
+                            <object class="wxFlexGridSizer" expanded="1">
+                                <property name="cols">2</property>
+                                <property name="flexible_direction">wxBOTH</property>
+                                <property name="growablecols">1</property>
+                                <property name="growablerows"></property>
+                                <property name="hgap">0</property>
                                 <property name="minimum_size"></property>
-                                <property name="name">bSizer4</property>
-                                <property name="orient">wxHORIZONTAL</property>
+                                <property name="name">fgSizer5</property>
+                                <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                 <property name="permission">none</property>
+                                <property name="rows">2</property>
+                                <property name="vgap">0</property>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
-                                    <property name="proportion">0</property>
+                                    <property name="proportion">1</property>
                                     <object class="wxStaticText" expanded="0">
                                         <property name="BottomDockable">1</property>
                                         <property name="LeftDockable">1</property>
@@ -532,7 +539,7 @@
                                         <property name="gripper">0</property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">Song Template</property>
+                                        <property name="label">Song Theme</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
@@ -585,7 +592,7 @@
                                 </object>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
-                                    <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                                    <property name="flag">wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND</property>
                                     <property name="proportion">1</property>
                                     <object class="wxComboBox" expanded="0">
                                         <property name="BottomDockable">1</property>
@@ -623,7 +630,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_songTemplateComboBox</property>
+                                        <property name="name">m_songThemeComboBox</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -676,21 +683,10 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
-                            </object>
-                        </object>
-                        <object class="sizeritem" expanded="0">
-                            <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
-                            <property name="proportion">1</property>
-                            <object class="wxBoxSizer" expanded="0">
-                                <property name="minimum_size"></property>
-                                <property name="name">bSizer5</property>
-                                <property name="orient">wxHORIZONTAL</property>
-                                <property name="permission">none</property>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
-                                    <property name="proportion">0</property>
+                                    <property name="proportion">1</property>
                                     <object class="wxStaticText" expanded="0">
                                         <property name="BottomDockable">1</property>
                                         <property name="LeftDockable">1</property>
@@ -719,7 +715,7 @@
                                         <property name="gripper">0</property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">Slide Template</property>
+                                        <property name="label">Slide Theme</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
@@ -772,7 +768,7 @@
                                 </object>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
-                                    <property name="flag">wxALL</property>
+                                    <property name="flag">wxALL|wxEXPAND</property>
                                     <property name="proportion">1</property>
                                     <object class="wxComboBox" expanded="0">
                                         <property name="BottomDockable">1</property>
@@ -810,7 +806,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_customSlideTemplateComboBox</property>
+                                        <property name="name">m_slideThemeComboBox</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -906,7 +902,7 @@
                                 <property name="minimize_button">0</property>
                                 <property name="minimum_size"></property>
                                 <property name="moveable">1</property>
-                                <property name="name">m_checkBox1</property>
+                                <property name="name">m_themeDefaultCheckBox</property>
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>
@@ -959,16 +955,16 @@
                     <property name="border">5</property>
                     <property name="flag">wxALIGN_RIGHT|wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">bSizer6</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
-                        <object class="sizeritem" expanded="1">
+                        <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxALL</property>
                             <property name="proportion">0</property>
-                            <object class="wxButton" expanded="1">
+                            <object class="wxButton" expanded="0">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -1052,11 +1048,11 @@
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
-                        <object class="sizeritem" expanded="1">
+                        <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxALL</property>
                             <property name="proportion">0</property>
-                            <object class="wxButton" expanded="1">
+                            <object class="wxButton" expanded="0">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>

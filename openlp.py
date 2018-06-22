@@ -87,6 +87,10 @@ class ServiceItem:
         self.openlp_data['serviceitem']['header']['auto_play_slides_once'] = False
         self.openlp_data['serviceitem']['header']['notes'] = ''
         self.openlp_data['serviceitem']['header']['plugin'] = ''
+        
+    def SetTheme(self, theme):
+        self.openlp_data['serviceitem']['header']['theme'] = theme
+        
 
 class Song(ServiceItem):
     def __init__(self, song_title, authors, verses, update_timestamp):
@@ -104,7 +108,6 @@ class Song(ServiceItem):
         self.openlp_data['serviceitem']['header']['capabilities'] = [2,1,5,8,9,13]
         self.openlp_data['serviceitem']['header']['footer'] = [song_title, "Written by: {0}".format(authors)]
         self.openlp_data['serviceitem']['header']['plugin'] = 'songs'
-        self.openlp_data['serviceitem']['header']['theme'] = None
 
         # these are the openlp names for each of these PCO verse types
         # the OpenLP verse name is 1 letter and 1 number.
@@ -196,4 +199,3 @@ class CustomSlide(ServiceItem):
         self.openlp_data['serviceitem']['header']['capabilities'] = [2,1,5,13,8]
         self.openlp_data['serviceitem']['header']['footer'] = [custom_slide_title]
         self.openlp_data['serviceitem']['header']['plugin'] = 'custom'
-        self.openlp_data['serviceitem']['header']['theme'] = None
