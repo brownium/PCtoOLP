@@ -20,7 +20,7 @@ class ServiceManager:
         openlp_core = {}
         openlp_core['openlp_core'] = {}
         openlp_core['openlp_core']['lite-service'] = False
-        openlp_core['openlp_core']['service-theme'] = 'Blue Burst'
+        openlp_core['openlp_core']['service-theme'] = None
 
         self.openlp_data.append(openlp_core)
 
@@ -151,4 +151,4 @@ class CustomSlide(ServiceItem):
         self.openlp_data['serviceitem']['header']['capabilities'] = [2,1,5,13,8]
         self.openlp_data['serviceitem']['header']['footer'] = [custom_slide_title]
         self.openlp_data['serviceitem']['header']['plugin'] = 'custom'
-        self.openlp_data['serviceitem']['header']['theme'] = 'Default Slide Theme'
+        self.openlp_data['serviceitem']['header']['theme'] = None

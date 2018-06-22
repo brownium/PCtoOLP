@@ -3,6 +3,7 @@
 import requests
 import openlp
 import re
+from datetime import datetime
 
 def SplitLyricsIntoVerses(lyrics):
     
@@ -27,13 +28,14 @@ def SplitLyricsIntoVerses(lyrics):
     nextVerseTagFromLyrics = ''
 
     for line in lyrics_lines:
+
+        # strip out curly braces and the content inside {}
+        line = re.sub('{.*?}+','',line)
+        # strip out any extraneous tags <...>
+        line = re.sub('<.*?>','',line)
         # remove beginning/trailing whitespace and line breaks
         line = line.rstrip()
         line = line.lstrip()
-        # strip out curly braces and the content inside {}
-        line = re.sub('{.*?}','',line)
-        # strip out any extraneous tags <...>
-        line = re.sub('<.*?>','',line)
                 
         # if we found any of the verse/chorus markers, 
         # save the text and treat this like a blank line
@@ -77,13 +79,14 @@ def SplitLyricsIntoVerses(lyrics):
             foundEmptyLine = 0  
             
     # put the very last verseLines into the outputVerses array
-    verse = {}
-    if len(verseTagFromLyrics):
-        verse['verseTag'] = verseTagFromLyrics
-    else:
-        verse['verseTag'] = "V{0}".format(verseNumber)
-    verse['raw_slide'] = verseLines
-    outputVerses.append(verse)
+    if len(verseLines):
+        verse = {}
+        if len(verseTagFromLyrics):
+            verse['verseTag'] = verseTagFromLyrics
+        else:
+            verse['verseTag'] = "V{0}".format(verseNumber)
+        verse['raw_slide'] = verseLines
+        outputVerses.append(verse)
     
     return outputVerses
 
@@ -126,7 +129,11 @@ for plan in plans['data']:
     index += 1
 
 plan_index = input("Enter Index (far left number) of Desired Plan Date:  ")
-plan_date = plans['data'][plan_index]['attributes']['dates']
+
+# create a YYYYMMDD plan_date
+datetime_object = datetime.strptime(plans['data'][plan_index]['attributes']['dates'], '%B %d, %Y' )
+plan_date = datetime.strftime(datetime_object, '%Y%m%d')
+
 plan_url = plans['data'][plan_index]['links']['self']
 
 plan_content = requests.get(plan_url, auth=(pco_application_id,pco_secret)).json()
