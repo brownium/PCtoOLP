@@ -92,8 +92,6 @@ class Song(ServiceItem):
     def __init__(self, song_title, authors, verses, update_timestamp):
         ServiceItem.__init__(self)
 
-#         # remove the trailing Z on the timestamp
-#         self.update_timestamp = re.sub('Z$','',update_timestamp)
         self.update_timestamp = update_timestamp
 
         # set the custom elements that are unique for songs
@@ -108,24 +106,68 @@ class Song(ServiceItem):
         self.openlp_data['serviceitem']['header']['plugin'] = 'songs'
         self.openlp_data['serviceitem']['header']['theme'] = None
 
+        # these are the openlp names for each of these PCO verse types
+        # the OpenLP verse name is 1 letter and 1 number.
+        # for the json format, the number can be repeated, but in the
+        # embedded xml format, the verse name should be unique and lowercase
+        # like:  v1a, v1b, v2, v3, p1, c1, b1
+        verseTypePCOToOpenLP = {}
+        verseTypePCOToOpenLP['VERSE'] = 'V'
+        verseTypePCOToOpenLP['V'] = 'V'
+        verseTypePCOToOpenLP['C'] = 'C'
+        verseTypePCOToOpenLP['CHORUS'] = 'C'
+        verseTypePCOToOpenLP['PRECHORUS'] = 'P'
+        verseTypePCOToOpenLP['INTRO'] = 'I'
+        verseTypePCOToOpenLP['ENDING'] = 'E'
+        verseTypePCOToOpenLP['BRIDGE'] = 'B'
+
         for verse in verses:
-            self.AppendVerse(verse['raw_slide'],verse['verseTag'])
+            
+            # lookup the verseTag from the dictionary and use only a 2-digit
+            m = re.search("^(\w+?)\s*(\d)*$", verse['verseTag'])
+            verseTypePCO = m.group(1)
+            if m.lastindex == 2:
+                verseTypePCONumber = m.group(2)
+            else:
+                verseTypePCONumber = 1
+                
+            # lookup the OpenLP VerseTag from the dictionary, with default of 'O' for OTHER
+            openLPVerseType = 'O'
+            if verseTypePCOToOpenLP.has_key(verseTypePCO.upper()):
+                openLPVerseType = verseTypePCOToOpenLP[verseTypePCO.upper()]
+                
+            openLPVerseTag = "{0}{1}".format(openLPVerseType, verseTypePCONumber)
+                
+                
+            self.AppendVerse(verse['raw_slide'],openLPVerseTag)
         self.UpdateXMLString()
 
     def UpdateXMLString(self):
         xml_string = u"""<?xml version='1.0' encoding='UTF-8'?>
 <song xmlns=\"http://openlyrics.info/namespace/2009/song\" version=\"0.8\" \
-createdIn=\"OpenLP 2.4.6\" modifiedIn=\"OpenLP 2.4.6\" modifiedDate=\"{2}\">\
+createdIn=\"PCO\" modifiedIn=\"PCO\" modifiedDate=\"{2}\">\
 <properties>\
 <titles><title>{0}</title></titles>\
 <authors><author>{1}</author></authors>\
 </properties><lyrics>""".format(self.openlp_data['serviceitem']['header']['title'],self.openlp_data['serviceitem']['header']['data']['authors'],self.update_timestamp)
 
+        versesUsed = {}
+
         for verse in self.openlp_data['serviceitem']['data']:
             
             verse_with_html_breaks = re.sub("\n","<br/>",verse.raw_slide)
             
-            xml_string += u"<verse name=\"{0}\"><lines>{1}</lines></verse>".format(verse.verseTag, verse_with_html_breaks)
+            # make each verseTag unique, stupid index must be alpha instead of numeric
+            index = 'a'
+            xmlVerseTag = "{0}_{1}".format(verse.verseTag.lower(),index)
+            
+            while versesUsed.has_key(xmlVerseTag):
+                index = chr(ord(index) + 1)
+                xmlVerseTag = "{0}{1}".format(verse.verseTag.lower(),index)
+                
+            versesUsed[xmlVerseTag] = 1
+            
+            xml_string += u"<verse name=\"{0}\"><lines>{1}</lines></verse>".format(xmlVerseTag, verse_with_html_breaks)
 
         xml_string += u"</lyrics></song>"
 
