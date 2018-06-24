@@ -7,6 +7,7 @@ import sys
 from datetime import datetime
 import openlp
 import os
+import re
 
 class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
     def __init__(self,parent):
@@ -77,9 +78,14 @@ class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
         self.m_selectPlanComboBox.Clear()
         self.m_selectPlanComboBox.Append('Select Plan Date')
         self.m_selectPlanComboBox.SetSelection(0)
-
+            
+        # Get Today's date and see if it is listed... if it is, then set it at startup
+        date_string = "{dt:%B} {dt.day}, {dt.year}".format(dt=datetime.today())
+        
         for plan in plan_list:
-            self.m_selectPlanComboBox.Append(plan['attributes']['dates'],plan['id'])
+            combo_box_index = self.m_selectPlanComboBox.Append(plan['attributes']['dates'],plan['id'])
+            if date_string == plan['attributes']['dates']:
+                self.m_selectPlanComboBox.SetSelection(combo_box_index)
         
     def ServiceTypeSelected( self, event ):
         self.ShowPlanListForServiceTypeSelection()
