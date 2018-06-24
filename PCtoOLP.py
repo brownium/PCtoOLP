@@ -7,7 +7,6 @@ import sys
 from datetime import datetime
 import openlp
 import os
-from modulegraph.modulegraph import entry
 
 class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
     def __init__(self,parent):

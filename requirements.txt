@@ -3,3 +3,4 @@ Tornado
 MuseParse==1.1.9
 requests
 wxpython
+pyinstaller
