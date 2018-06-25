@@ -136,7 +136,7 @@ class Song(ServiceItem):
                 
             # lookup the OpenLP VerseTag from the dictionary, with default of 'O' for OTHER
             openLPVerseType = 'O'
-            if verseTypePCOToOpenLP.has_key(verseTypePCO.upper()):
+            if verseTypePCO.upper() in verseTypePCOToOpenLP:
                 openLPVerseType = verseTypePCOToOpenLP[verseTypePCO.upper()]
                 
             openLPVerseTag = "{0}{1}".format(openLPVerseType, verseTypePCONumber)
@@ -164,7 +164,7 @@ createdIn=\"PCO\" modifiedIn=\"PCO\" modifiedDate=\"{2}\">\
             index = 'a'
             xmlVerseTag = "{0}_{1}".format(verse.verseTag.lower(),index)
             
-            while versesUsed.has_key(xmlVerseTag):
+            while xmlVerseTag in versesUsed:
                 index = chr(ord(index) + 1)
                 xmlVerseTag = "{0}{1}".format(verse.verseTag.lower(),index)
                 
