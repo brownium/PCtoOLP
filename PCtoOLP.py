@@ -86,6 +86,7 @@ class MainFrame(PCtoOLP_wxFormBuilder.MainFrame):
             combo_box_index = self.m_selectPlanComboBox.Append(plan['attributes']['dates'],plan['id'])
             if date_string == plan['attributes']['dates']:
                 self.m_selectPlanComboBox.SetSelection(combo_box_index)
+                self.m_saveButton.Enable(True)
         
     def ServiceTypeSelected( self, event ):
         self.ShowPlanListForServiceTypeSelection()
