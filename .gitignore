@@ -103,3 +103,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/.DS_Store
+/openlp_services/
+/openlp_services/
